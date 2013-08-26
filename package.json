@@ -1,0 +1,10 @@
+{
+    "name": "DailyJoke",
+    "version": "0.0.0",
+    "description": "Daily Joke Web App",
+    "dependencies": {
+        "express": "latest",
+        "jade": "latest"
+    },
+    "author": "mhshi"
+}

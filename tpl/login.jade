@@ -1,0 +1,10 @@
+doctype html
+html
+    include header
+    link(rel='stylesheet', href='/style/login.css')
+    body
+        .container
+            form(class="form-signin", action="loginpost", method="post")
+                input(class="input-block-level", type="text", placeholder="Login Name", name="username")
+                input(class="input-block-level", type="password", placeholder="Password", name="password")
+                button(class="btn btn-large btn-primary", type="submit")="Sign In"
