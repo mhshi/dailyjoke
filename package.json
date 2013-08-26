@@ -4,7 +4,8 @@
     "description": "Daily Joke Web App",
     "dependencies": {
         "express": "latest",
-        "jade": "latest"
+        "jade": "latest",
+        "mongodb": "latest"
     },
     "author": "mhshi"
 }
