@@ -55,7 +55,28 @@ app.post('/loginpost', function(req, res){
 //ajax request entry piont
 app.all('/mposts', function(req, res){
     console.log(req.method);
-    res.send('test');
+
+    var MongoClient = require('mongodb').MongoClient;
+    MongoClient.connect("mongodb://lemo:lemo@localhost:27017/lemo", function(err, db){
+        if (err) {
+            console.log(err);
+            res.send('Connect Fail');
+            return;
+        }
+
+        var collection = db.collection('settings');
+        collection.find().toArray(function(err, items){
+            if (err) {
+                console.log(err);
+                res.send('Search Fail');
+                return;
+            }
+            console.log(items);
+            res.send('test');
+            return;
+        });
+    });
+
 });
 
 app.listen(port);
