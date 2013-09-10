@@ -53,30 +53,57 @@ app.post('/loginpost', function(req, res){
 });
 
 //ajax request entry piont
-app.all('/mposts', function(req, res){
-    console.log(req.method);
+app.all('/mposts/:path', function(req, res){
+    if (!req.session.username) {
+        res.send(401, 'Unauthorized.');
+    }
+    var msg_obj = new Object();
+    var pm = require('./lib/postmanager/postmanager');
+    var post = new Object();
+    //POST
+    if (req.method == 'POST') {
+        var path = req.params.path;
+        if (path == 'save') {
+            var post = new Object();
+            post.title = req.body.post_title;
+            post.content = req.body.post_body;
 
-    var MongoClient = require('mongodb').MongoClient;
-    MongoClient.connect("mongodb://lemo:lemo@localhost:27017/lemo", function(err, db){
-        if (err) {
-            console.log(err);
-            res.send('Connect Fail');
-            return;
+            pm.createPost(post, function(post){
+                if (post) {
+                    msg_obj.success = true;
+                    msg_obj.data = post;
+                } else {
+                    msg_obj.success = false;
+                    msg_obj.error = 'Fail to save.';
+                }
+                res.send(JSON.stringify(msg_obj));
+            });
+        } else {
+            res.send(404, 'Page not found.');
         }
-
-        var collection = db.collection('settings');
-        collection.find().toArray(function(err, items){
-            if (err) {
-                console.log(err);
-                res.send('Search Fail');
-                return;
-            }
-            console.log(items);
-            res.send('test');
-            return;
-        });
-    });
-
+    //GET
+    } else if (req.method == 'GET'){
+        var path = req.params.path;
+        if (path == 'list' && req.query.start && req.query.limit) {
+            var start = parseInt(req.query.start);
+            var limit = parseInt(req.query.limit);
+ 
+            pm.getPostsList(start, limit, function(posts){
+                if (posts) {
+                    msg_obj.success = true;
+                    msg_obj.data = posts;
+                } else {
+                    msg_obj.success = false;
+                    msg_obj.error = 'Fail to save.';
+                }
+                res.send(JSON.stringify(msg_obj));
+            });
+        } else {
+            res.send(404, 'Page not found.');
+        }
+    } else {
+        res.send(404, 'Page not found.');
+    }
 });
 
 app.listen(port);
