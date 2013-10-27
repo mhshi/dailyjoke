@@ -1,0 +1,24 @@
+.post_header {
+    height: 24px;
+    min-width: 380px;
+    background-color: #e5e5e5;
+}
+
+.post_title {
+    float: left;
+    line-height: 24px;
+    font-weight: bold;
+    min-width: 300px;
+}
+
+.post_menu {
+    float: right;
+    width: 80px;
+    text-align: center;
+    line-height: 24px;
+}
+.post_menu_item {
+    float: right;
+    width: 40px;
+    cursor: pointer;
+}

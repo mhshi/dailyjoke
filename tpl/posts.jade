@@ -1,5 +1,10 @@
 doctype 5
 html
     include header
+    link(rel='stylesheet', href='/style/manage.css')
+    script(src='/js/postlist.js')
+    script(src='/js/posts.js')
     body
-        div="Posts Page"
+        div(class="page-header")
+            h1="Joke List"
+        div(class="container" id="postslist")

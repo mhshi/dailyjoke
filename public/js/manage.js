@@ -2,23 +2,20 @@ $(function(){
     $('#savebtn').click(dj_save_post);
 
     do {
-       var num = dj_generate_posts_list();
+       var num = dj_generate_posts_list('postslist', false);
        if (num == 0 || num < posts_limit) {
            break;
        }
-    }while($(document).height() == $(window).height())
+    }while($(document).height() == $(window).height());
 
     $(window).scroll(function() {
         if($(window).scrollTop() == $(document).height() - $(window).height()) {
            // ajax call get data from server and append to the div
-           dj_generate_posts_list();
+           dj_generate_posts_list('postslist', false);
         }
     });
 
 });
-
-var posts_start = 0;
-var posts_limit = 5;
 
 function dj_save_post() {
     var post_title = $('#posttitle').val();
@@ -39,33 +36,12 @@ function dj_save_post() {
 
         dj_clear_posts_list();
         posts_start = 0;
-        dj_generate_posts_list();
-    }
-}
-
-function dj_generate_posts_list() {
-    var para = {
-        start: posts_start,
-        limit: posts_limit
-    };
-
-    var result = $.ajax({
-        type: 'GET',
-        url: '/mposts/list',
-        data: para,
-        async: false
-    }).responseText;
-
-    result = $.parseJSON(result);
-    if (result.success) {
-        posts_start += result.data.length;
-        for (var i=0, length=result.data.length; i<length; i++) {
-            dj_add_post_to_list(result.data[i]);
-        }
-        return result.data.length;
-    } else {
-        alert(result.error);
-        return 0;
+        do {
+            var num = dj_generate_posts_list('postslist', false);
+            if (num == 0 || num < posts_limit) {
+                break;
+            }
+        }while($(document).height() == $(window).height());
     }
 }
 
@@ -73,13 +49,27 @@ function dj_clear_posts_list() {
     $('#postslist').empty();
 }
 
-function dj_add_post_to_list(post) {
-    var list = $('#postslist');
+function dj_delete_post(event) {
+    var post_id = $(this).parent().attr('post_id');
+    var para = {
+        post_id: post_id
+    };
 
-    var ppanel = $('<div></div>');
-    var html = '<h4>'+post.title+'</h4>';
-    html += post.content;
-    ppanel.html(html);
+    var result = $.ajax({
+        type: 'POST',
+        url: '/mposts/delete',
+        data: para,
+        async: false
+    }).responseText;
 
-    list.append(ppanel);
+    result = $.parseJSON(result);
+    if (result.success) {
+        $('#post_'+post_id).remove();
+    } else {
+        alert(result.error);
+    }
+}
+
+function dj_generate_qr(event){
+    alert('QR');
 }

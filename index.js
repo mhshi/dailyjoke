@@ -78,6 +78,18 @@ app.all('/mposts/:path', function(req, res){
                 }
                 res.send(JSON.stringify(msg_obj));
             });
+        } else if (path == 'delete') {
+            var post_id = req.body.post_id;
+
+            pm.deletePostById(post_id, function(result){
+                if (result) {
+                    msg_obj.success = true;
+                } else {
+                    msg_obj.success = false;
+                    msg_obj.error = 'Fail to delete';
+                }
+                res.send(JSON.stringify(msg_obj));
+            });
         } else {
             res.send(404, 'Page not found.');
         }
